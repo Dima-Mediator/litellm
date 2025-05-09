@@ -30,6 +30,9 @@ jobs:
       - name: Get current date
         id: date
         run: echo "DATE=$(date +'%Y%m%d')" >> $GITHUB_ENV
+        
+      - name: Convert repo name to lowercase
+        run: echo "IMAGE_NAME_LC=${IMAGE_NAME,,}" >> $GITHUB_ENV
 
       - name: Log in to GitHub Container Registry
         uses: docker/login-action@v3
@@ -50,8 +53,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}-${{ env.DATE }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:${{ env.VERSION }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}:${{ env.VERSION }}-${{ env.DATE }}
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -63,8 +66,8 @@ jobs:
           file: ./docker/Dockerfile.non_root
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-non_root:${{ env.VERSION }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-non_root:${{ env.VERSION }}-${{ env.DATE }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}-non_root:${{ env.VERSION }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}-non_root:${{ env.VERSION }}-${{ env.DATE }}
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -76,8 +79,8 @@ jobs:
           file: ./docker/Dockerfile.database
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-database:${{ env.VERSION }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-database:${{ env.VERSION }}-${{ env.DATE }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}-database:${{ env.VERSION }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}-database:${{ env.VERSION }}-${{ env.DATE }}
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max 
