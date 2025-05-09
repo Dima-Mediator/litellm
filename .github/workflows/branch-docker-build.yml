@@ -58,29 +58,3 @@ jobs:
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
-      
-      - name: Build and push non-root Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./docker/Dockerfile.non_root
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}-non_root:${{ env.VERSION }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}-non_root:${{ env.VERSION }}-${{ env.DATE }}
-          platforms: linux/amd64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-
-      - name: Build and push database Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./docker/Dockerfile.database
-          push: true
-          tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}-database:${{ env.VERSION }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME_LC }}-database:${{ env.VERSION }}-${{ env.DATE }}
-          platforms: linux/amd64
-          cache-from: type=gha
-          cache-to: type=gha,mode=max 
