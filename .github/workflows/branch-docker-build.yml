@@ -3,7 +3,7 @@ name: Build Branch Docker Image
 on:
   push:
     branches:
-      - '*'  # This will trigger on any branch push
+      - 'release/*'  # Only trigger on release/* branches
 
 env:
   REGISTRY: ghcr.io
@@ -22,6 +22,10 @@ jobs:
       - name: Extract branch name
         shell: bash
         run: echo "BRANCH_NAME=${GITHUB_REF#refs/heads/}" >> $GITHUB_ENV
+
+      - name: Extract version from branch name
+        shell: bash
+        run: echo "VERSION=${GITHUB_REF#refs/heads/release/}" >> $GITHUB_ENV
 
       - name: Get current date
         id: date
@@ -46,8 +50,8 @@ jobs:
           context: .
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.BRANCH_NAME }}-${{ env.DATE }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.VERSION }}-${{ env.DATE }}
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -59,8 +63,8 @@ jobs:
           file: ./docker/Dockerfile.non_root
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-non_root:${{ env.BRANCH_NAME }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-non_root:${{ env.BRANCH_NAME }}-${{ env.DATE }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-non_root:${{ env.VERSION }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-non_root:${{ env.VERSION }}-${{ env.DATE }}
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max
@@ -72,8 +76,8 @@ jobs:
           file: ./docker/Dockerfile.database
           push: true
           tags: |
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-database:${{ env.BRANCH_NAME }}
-            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-database:${{ env.BRANCH_NAME }}-${{ env.DATE }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-database:${{ env.VERSION }}
+            ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}-database:${{ env.VERSION }}-${{ env.DATE }}
           platforms: linux/amd64
           cache-from: type=gha
           cache-to: type=gha,mode=max 
